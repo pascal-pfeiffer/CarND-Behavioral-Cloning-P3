@@ -18,7 +18,7 @@ BATCH_SIZE = 32
 # and also before adding left and right pictures to the mix
 USE_AUGMENTATION = True
 USE_LEFT_RIGHT = False
-LEFT_RIGHT_ANGLE_CORRECTION = 0.06
+LEFT_RIGHT_ANGLE_CORRECTION = 0.15
 
 driving_log = pd.read_csv(os.path.join(DATA_DIR, "driving_log.csv"), skipinitialspace=True)
 # print(driving_log.head())
@@ -82,7 +82,9 @@ validation_generator = generator(validation_driving_log, batch_size=BATCH_SIZE)
 
 model = Sequential()
 model.add(Lambda(lambda x: x / 255.0 - 0.5, input_shape=(160, 320, 3)))
-model.add(Cropping2D(cropping=((50, 20), (0, 0))))
+# cropping 20 pixels from the bottom as proposed in the lessons seems to be a little bit too few
+# the hood is still visible and may break the augmentation. Thus, I increased it to 25 pixels
+model.add(Cropping2D(cropping=((50, 25), (0, 0))))
 model.add(Conv2D(24, (5, 5), strides=(2, 2), activation="relu"))
 model.add(Conv2D(36, (5, 5), strides=(2, 2), activation="relu"))
 model.add(Conv2D(48, (5, 5), strides=(2, 2), activation="relu"))
