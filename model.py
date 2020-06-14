@@ -112,7 +112,7 @@ train_generator = generator(train_driving_log, batch_size=BATCH_SIZE, is_trainin
 validation_generator = generator(validation_driving_log, batch_size=BATCH_SIZE, is_training=False)
 
 model = Sequential()
-# range -0.5 to +0.5 as proposed in the lessons seems to a very narrow.
+# range -0.5 to +0.5 as proposed in the lessons seems to be very narrow.
 # I increased the range to +-1
 model.add(Lambda(lambda x: x / 127.5 - 1.0, input_shape=(160, 320, 3)))
 # cropping 20 pixels from the bottom as proposed in the lessons seems to be a little bit too few
@@ -132,6 +132,7 @@ model.add(Dense(50, activation="relu"))
 model.add(Dense(10, activation="relu"))
 # model.add(Dropout(DROPOUT))
 model.add(Dense(1))
+print(model.summary())
 
 multiplier = 1
 if USE_AUGMENTATION is True:
